@@ -78,6 +78,12 @@
         <p>• Moles will disappear after 2.5 seconds if you don't hit them</p>
         <p>• You have 60 seconds to get the highest score possible!</p>
         
+        <p>🏆 <strong>How to Win/Lose:</strong></p>
+        <p>• <strong>EXCELLENT:</strong> Score 200+ points (20+ moles hit)</p>
+        <p>• <strong>GOOD:</strong> Score 100-190 points (10-19 moles hit)</p>
+        <p>• <strong>OKAY:</strong> Score 50-90 points (5-9 moles hit)</p>
+        <p>• <strong>TRY AGAIN:</strong> Score below 50 points (less than 5 moles hit)</p>
+        
         <p>🥽 <strong>VR Mode:</strong> Click the VR goggles icon in the bottom right to enter VR mode</p>
         <p>🖱️ <strong>Desktop Mode:</strong> Use your mouse to look around and click on moles</p>
         
@@ -148,7 +154,7 @@
                             value="Time: 60" width="6"></a-text>
 
                     <!-- Game Over display (initially hidden) -->
-                    <a-text id="game-over" position="0 2 -3" align="center" color="red" 
+                    <a-text id="game-over" position="0 1.5 -3" align="center" color="red" 
                             value="" width="8" visible="false"></a-text>
 
                     <!-- Instructions in VR -->
@@ -181,6 +187,19 @@
             let gameInterval;
             let timerInterval;
 
+            // Function to determine performance level
+            function getPerformanceLevel(finalScore) {
+                if (finalScore >= 200) {
+                    return { level: "EXCELLENT", color: "green", message: "Amazing! You're a mole-whacking master!" };
+                } else if (finalScore >= 100) {
+                    return { level: "GOOD", color: "blue", message: "Great job! You've got good reflexes!" };
+                } else if (finalScore >= 50) {
+                    return { level: "OKAY", color: "orange", message: "Not bad! Keep practicing to improve!" };
+                } else {
+                    return { level: "TRY AGAIN", color: "red", message: "Don't give up! Practice makes perfect!" };
+                }
+            }
+
             // Start the countdown timer
             timerInterval = setInterval(() => {
                 timeLeft--;
@@ -210,8 +229,14 @@
                     hideMole(mole);
                 });
                 
-                // Show game over message
-                gameOverText.setAttribute('value', `GAME OVER!\nFinal Score: ${score}\nRefresh to play again`);
+                // Determine performance and show results
+                const performance = getPerformanceLevel(score);
+                const molesHit = score / 10;
+                
+                gameOverText.setAttribute('value', 
+                    `GAME OVER!\n\nFinal Score: ${score}\nMoles Hit: ${molesHit}\n\nRating: ${performance.level}\n${performance.message}\n\nRefresh to play again`
+                );
+                gameOverText.setAttribute('color', performance.color);
                 gameOverText.setAttribute('visible', 'true');
             }
 
@@ -284,7 +309,7 @@
             
             // Start the game
             gameInterval = setInterval(showRandomMole, 1500);
-            console.log("Whack-a-Mole game started with 60-second timer!");
+            console.log("Whack-a-Mole game started with performance ratings!");
         }
     </script>
 </body>
