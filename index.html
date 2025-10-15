@@ -76,7 +76,7 @@
         <p>• Look at a mole and click to whack it!</p>
         <p>• Each successful hit earns you 10 points</p>
         <p>• Moles will disappear after 2.5 seconds if you don't hit them</p>
-        <p>• Try to get the highest score possible!</p>
+        <p>• You have 60 seconds to get the highest score possible!</p>
         
         <p>🥽 <strong>VR Mode:</strong> Click the VR goggles icon in the bottom right to enter VR mode</p>
         <p>🖱️ <strong>Desktop Mode:</strong> Use your mouse to look around and click on moles</p>
@@ -141,12 +141,18 @@
                     <a-box id="mole5" class="mole" position="1 -0.3 0" width="0.6" height="0.6" depth="0.6" 
                            color="#DEB887" shadow="cast: true"></a-box>
 
-                    <!-- Score display -->
-                    <a-text id="score" position="0 3 -3" align="center" color="white" 
-                            value="Score: 0" width="8"></a-text>
+                    <!-- Score and Timer display -->
+                    <a-text id="score" position="-1.5 3 -3" align="center" color="white" 
+                            value="Score: 0" width="6"></a-text>
+                    <a-text id="timer" position="1.5 3 -3" align="center" color="yellow" 
+                            value="Time: 60" width="6"></a-text>
+
+                    <!-- Game Over display (initially hidden) -->
+                    <a-text id="game-over" position="0 2 -3" align="center" color="red" 
+                            value="" width="8" visible="false"></a-text>
 
                     <!-- Instructions in VR -->
-                    <a-text position="0 2.5 -3" align="center" color="yellow" 
+                    <a-text position="0 2.5 -3" align="center" color="white" 
                             value="Look at moles and click to whack them!" width="6"></a-text>
 
                     <!-- Camera with cursor for interaction -->
@@ -166,9 +172,48 @@
         function initializeGame() {
             // Game variables
             let score = 0;
+            let timeLeft = 60;
             let gameActive = true;
             const scoreText = document.querySelector('#score');
+            const timerText = document.querySelector('#timer');
+            const gameOverText = document.querySelector('#game-over');
             let activeMoles = new Set();
+            let gameInterval;
+            let timerInterval;
+
+            // Start the countdown timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerText.setAttribute('value', `Time: ${timeLeft}`);
+                
+                // Change timer color when time is running low
+                if (timeLeft <= 10) {
+                    timerText.setAttribute('color', 'red');
+                } else if (timeLeft <= 20) {
+                    timerText.setAttribute('color', 'orange');
+                }
+                
+                // End game when time runs out
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            // Function to end the game
+            function endGame() {
+                gameActive = false;
+                clearInterval(gameInterval);
+                clearInterval(timerInterval);
+                
+                // Hide all active moles
+                activeMoles.forEach(mole => {
+                    hideMole(mole);
+                });
+                
+                // Show game over message
+                gameOverText.setAttribute('value', `GAME OVER!\nFinal Score: ${score}\nRefresh to play again`);
+                gameOverText.setAttribute('visible', 'true');
+            }
 
             // Function to show a random mole
             function showRandomMole() {
@@ -216,7 +261,7 @@
             function hitMole(event) {
                 const mole = event.target;
                 
-                if (activeMoles.has(mole)) {
+                if (activeMoles.has(mole) && gameActive) {
                     score += 10;
                     scoreText.setAttribute('value', `Score: ${score}`);
                     
@@ -238,8 +283,8 @@
             });
             
             // Start the game
-            setInterval(showRandomMole, 1500);
-            console.log("Whack-a-Mole game started!");
+            gameInterval = setInterval(showRandomMole, 1500);
+            console.log("Whack-a-Mole game started with 60-second timer!");
         }
     </script>
 </body>
