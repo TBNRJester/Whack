@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VR Whack-a-Mole Game</title>
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
         #intro-screen {
             position: fixed;
             top: 0;
@@ -18,7 +23,6 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            font-family: Arial, sans-serif;
             color: white;
             text-align: center;
         }
@@ -53,7 +57,12 @@
         }
         
         .hidden {
-            display: none;
+            display: none !important;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 100vh;
         }
     </style>
 </head>
@@ -75,63 +84,84 @@
         <button id="start-button">Start Game!</button>
     </div>
 
-    <!-- A-Frame Game Scene -->
-    <a-scene id="game-scene" class="hidden" background="color: #87CEEB" vr-mode-ui="enabled: true" embedded style="height: 100vh; width: 100vw;">
-        <!-- Lighting -->
-        <a-light type="ambient" color="#404040"></a-light>
-        <a-light type="directional" position="2 4 2" color="#ffffff"></a-light>
-
-        <!-- Ground -->
-        <a-plane position="0 0 0" rotation="-90 0 0" width="10" height="10" 
-                 color="#228B22" shadow="receive: true"></a-plane>
-
-        <!-- Game holes and moles -->
-        <a-cylinder id="hole1" position="-2 0.01 -1" radius="0.4" height="0.02" color="#654321"></a-cylinder>
-        <a-box id="mole1" class="mole" position="-2 -0.3 -1" width="0.6" height="0.6" depth="0.6" 
-               color="#8B4513" shadow="cast: true"></a-box>
-
-        <a-cylinder id="hole2" position="0 0.01 -2" radius="0.4" height="0.02" color="#654321"></a-cylinder>
-        <a-sphere id="mole2" class="mole" position="0 -0.3 -2" radius="0.3" 
-                  color="#D2691E" shadow="cast: true"></a-sphere>
-
-        <a-cylinder id="hole3" position="2 0.01 -1" radius="0.4" height="0.02" color="#654321"></a-cylinder>
-        <a-box id="mole3" class="mole" position="2 -0.3 -1" width="0.6" height="0.6" depth="0.6" 
-               color="#A0522D" shadow="cast: true"></a-box>
-
-        <a-cylinder id="hole4" position="-1 0.01 0" radius="0.4" height="0.02" color="#654321"></a-cylinder>
-        <a-sphere id="mole4" class="mole" position="-1 -0.3 0" radius="0.3" 
-                  color="#CD853F" shadow="cast: true"></a-sphere>
-
-        <a-cylinder id="hole5" position="1 0.01 0" radius="0.4" height="0.02" color="#654321"></a-cylinder>
-        <a-box id="mole5" class="mole" position="1 -0.3 0" width="0.6" height="0.6" depth="0.6" 
-               color="#DEB887" shadow="cast: true"></a-box>
-
-        <!-- Score display -->
-        <a-text id="score" position="0 3 -3" align="center" color="white" 
-                value="Score: 0" width="8"></a-text>
-
-        <!-- Instructions in VR -->
-        <a-text position="0 2.5 -3" align="center" color="yellow" 
-                value="Look at moles and click to whack them!" width="6"></a-text>
-
-        <!-- Camera with cursor for interaction -->
-        <a-camera position="0 1.6 3">
-            <a-cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                      material="color: white; shader: flat" 
-                      animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
-                      raycaster="objects: .mole"></a-cursor>
-        </a-camera>
-    </a-scene>
+    <!-- Game Container (initially hidden) -->
+    <div id="game-container" class="hidden"></div>
 
     <script>
         // Start game when button is clicked
         document.getElementById('start-button').addEventListener('click', function() {
+            // Hide intro screen
             document.getElementById('intro-screen').classList.add('hidden');
-            document.getElementById('game-scene').classList.remove('hidden');
             
-            // Initialize the game after a short delay
-            setTimeout(initializeGame, 500);
+            // Show game container
+            const gameContainer = document.getElementById('game-container');
+            gameContainer.classList.remove('hidden');
+            
+            // Load A-Frame script and create scene
+            const aframeScript = document.createElement('script');
+            aframeScript.src = 'https://aframe.io/releases/1.7.0/aframe.min.js';
+            aframeScript.onload = function() {
+                createGameScene();
+            };
+            document.head.appendChild(aframeScript);
         });
+
+        function createGameScene() {
+            const gameContainer = document.getElementById('game-container');
+            
+            // Create the A-Frame scene HTML
+            gameContainer.innerHTML = `
+                <a-scene background="color: #87CEEB" vr-mode-ui="enabled: true" embedded style="height: 100vh; width: 100vw;">
+                    <!-- Lighting -->
+                    <a-light type="ambient" color="#404040"></a-light>
+                    <a-light type="directional" position="2 4 2" color="#ffffff"></a-light>
+
+                    <!-- Ground -->
+                    <a-plane position="0 0 0" rotation="-90 0 0" width="10" height="10" 
+                             color="#228B22" shadow="receive: true"></a-plane>
+
+                    <!-- Game holes and moles -->
+                    <a-cylinder id="hole1" position="-2 0.01 -1" radius="0.4" height="0.02" color="#654321"></a-cylinder>
+                    <a-box id="mole1" class="mole" position="-2 -0.3 -1" width="0.6" height="0.6" depth="0.6" 
+                           color="#8B4513" shadow="cast: true"></a-box>
+
+                    <a-cylinder id="hole2" position="0 0.01 -2" radius="0.4" height="0.02" color="#654321"></a-cylinder>
+                    <a-sphere id="mole2" class="mole" position="0 -0.3 -2" radius="0.3" 
+                              color="#D2691E" shadow="cast: true"></a-sphere>
+
+                    <a-cylinder id="hole3" position="2 0.01 -1" radius="0.4" height="0.02" color="#654321"></a-cylinder>
+                    <a-box id="mole3" class="mole" position="2 -0.3 -1" width="0.6" height="0.6" depth="0.6" 
+                           color="#A0522D" shadow="cast: true"></a-box>
+
+                    <a-cylinder id="hole4" position="-1 0.01 0" radius="0.4" height="0.02" color="#654321"></a-cylinder>
+                    <a-sphere id="mole4" class="mole" position="-1 -0.3 0" radius="0.3" 
+                              color="#CD853F" shadow="cast: true"></a-sphere>
+
+                    <a-cylinder id="hole5" position="1 0.01 0" radius="0.4" height="0.02" color="#654321"></a-cylinder>
+                    <a-box id="mole5" class="mole" position="1 -0.3 0" width="0.6" height="0.6" depth="0.6" 
+                           color="#DEB887" shadow="cast: true"></a-box>
+
+                    <!-- Score display -->
+                    <a-text id="score" position="0 3 -3" align="center" color="white" 
+                            value="Score: 0" width="8"></a-text>
+
+                    <!-- Instructions in VR -->
+                    <a-text position="0 2.5 -3" align="center" color="yellow" 
+                            value="Look at moles and click to whack them!" width="6"></a-text>
+
+                    <!-- Camera with cursor for interaction -->
+                    <a-camera position="0 1.6 3">
+                        <a-cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                                  material="color: white; shader: flat" 
+                                  animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+                                  raycaster="objects: .mole"></a-cursor>
+                    </a-camera>
+                </a-scene>
+            `;
+
+            // Wait a moment for the scene to initialize, then start the game
+            setTimeout(initializeGame, 1000);
+        }
 
         function initializeGame() {
             // Game variables
