@@ -5,9 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VR Whack-a-Mole Game</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <style>
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+        
+        #intro-screen h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        #intro-screen p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+        
+        #start-button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background 0.3s;
+        }
+        
+        #start-button:hover {
+            background: #e55a2b;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <a-scene background="color: #87CEEB" vr-mode-ui="enabled: true" embedded style="height: 100vh; width: 100vw;">
+    <!-- Introduction Screen -->
+    <div id="intro-screen">
+        <h1>🔨 VR Whack-a-Mole 🔨</h1>
+        <p><strong>Welcome to the ultimate whack-a-mole experience in virtual reality!</strong></p>
+        <p>🎯 <strong>How to Play:</strong></p>
+        <p>• Moles (boxes and spheres) will randomly pop up from holes in the ground</p>
+        <p>• Look at a mole and click to whack it!</p>
+        <p>• Each successful hit earns you 10 points</p>
+        <p>• Moles will disappear after 2.5 seconds if you don't hit them</p>
+        <p>• Try to get the highest score possible!</p>
+        
+        <p>🥽 <strong>VR Mode:</strong> Click the VR goggles icon in the bottom right to enter VR mode</p>
+        <p>🖱️ <strong>Desktop Mode:</strong> Use your mouse to look around and click on moles</p>
+        
+        <button id="start-button">Start Game!</button>
+    </div>
+
+    <!-- A-Frame Game Scene -->
+    <a-scene id="game-scene" class="hidden" background="color: #87CEEB" vr-mode-ui="enabled: true" embedded style="height: 100vh; width: 100vw;">
         <!-- Lighting -->
         <a-light type="ambient" color="#404040"></a-light>
         <a-light type="directional" position="2 4 2" color="#ffffff"></a-light>
@@ -41,6 +110,10 @@
         <a-text id="score" position="0 3 -3" align="center" color="white" 
                 value="Score: 0" width="8"></a-text>
 
+        <!-- Instructions in VR -->
+        <a-text position="0 2.5 -3" align="center" color="yellow" 
+                value="Look at moles and click to whack them!" width="6"></a-text>
+
         <!-- Camera with cursor for interaction -->
         <a-camera position="0 1.6 3">
             <a-cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
@@ -51,8 +124,16 @@
     </a-scene>
 
     <script>
-        // Wait for A-Frame to fully load
-        document.addEventListener('DOMContentLoaded', function() {
+        // Start game when button is clicked
+        document.getElementById('start-button').addEventListener('click', function() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('game-scene').classList.remove('hidden');
+            
+            // Initialize the game after a short delay
+            setTimeout(initializeGame, 500);
+        });
+
+        function initializeGame() {
             // Game variables
             let score = 0;
             let gameActive = true;
@@ -120,18 +201,16 @@
                 }
             }
 
-            // Initialize game after scene loads
-            document.querySelector('a-scene').addEventListener('loaded', function() {
-                const moles = document.querySelectorAll('.mole');
-                moles.forEach(mole => {
-                    mole.addEventListener('click', hitMole);
-                });
-                
-                // Start the game
-                setInterval(showRandomMole, 1500);
-                console.log("Game started on GitHub Pages!");
+            // Set up mole click events
+            const moles = document.querySelectorAll('.mole');
+            moles.forEach(mole => {
+                mole.addEventListener('click', hitMole);
             });
-        });
+            
+            // Start the game
+            setInterval(showRandomMole, 1500);
+            console.log("Whack-a-Mole game started!");
+        }
     </script>
 </body>
 </html>
