@@ -156,9 +156,9 @@
                     <a-text id="timer" position="1.5 3 -3" align="center" color="yellow" 
                             value="Time: 60" width="6"></a-text>
 
-                    <!-- Game Over display (initially hidden) - moved higher up -->
-                    <a-text id="game-over" position="0 4 -4" align="center" color="red" 
-                            value="" width="10" visible="false"></a-text>
+                    <!-- Game Over display (initially hidden) -->
+                    <a-text id="game-over" position="0 3 -3" align="center" color="red" 
+                            value="" width="12" visible="false"></a-text>
 
                     <!-- Instructions in VR -->
                     <a-text position="0 2.5 -3" align="center" color="white" 
@@ -231,6 +231,10 @@
                 activeMoles.forEach(mole => {
                     hideMole(mole);
                 });
+                
+                // Hide score and timer text
+                scoreText.setAttribute('visible', 'false');
+                timerText.setAttribute('visible', 'false');
                 
                 // Hide instructions to make room for game over text
                 const instructions = document.querySelector('a-text[value="Look at moles and click to whack them!"]');
