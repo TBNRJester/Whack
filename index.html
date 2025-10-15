@@ -25,19 +25,22 @@
             z-index: 1000;
             color: white;
             text-align: center;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
         }
         
         #intro-screen h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
+            font-size: 2.5em;
+            margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         #intro-screen p {
-            font-size: 1.2em;
-            margin: 10px 0;
+            font-size: 1.1em;
+            margin: 8px 0;
             max-width: 600px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         
         #start-button {
@@ -48,7 +51,7 @@
             font-size: 1.5em;
             border-radius: 10px;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 20px;
             transition: background 0.3s;
         }
         
@@ -153,9 +156,9 @@
                     <a-text id="timer" position="1.5 3 -3" align="center" color="yellow" 
                             value="Time: 60" width="6"></a-text>
 
-                    <!-- Game Over display (initially hidden) -->
-                    <a-text id="game-over" position="0 1.5 -3" align="center" color="red" 
-                            value="" width="8" visible="false"></a-text>
+                    <!-- Game Over display (initially hidden) - moved higher up -->
+                    <a-text id="game-over" position="0 4 -4" align="center" color="red" 
+                            value="" width="10" visible="false"></a-text>
 
                     <!-- Instructions in VR -->
                     <a-text position="0 2.5 -3" align="center" color="white" 
@@ -228,6 +231,12 @@
                 activeMoles.forEach(mole => {
                     hideMole(mole);
                 });
+                
+                // Hide instructions to make room for game over text
+                const instructions = document.querySelector('a-text[value="Look at moles and click to whack them!"]');
+                if (instructions) {
+                    instructions.setAttribute('visible', 'false');
+                }
                 
                 // Determine performance and show results
                 const performance = getPerformanceLevel(score);
