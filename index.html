@@ -82,10 +82,10 @@
         <p>• You have 60 seconds to get the highest score possible!</p>
         
         <p>🏆 <strong>How to Win/Lose:</strong></p>
-        <p>• <strong>EXCELLENT:</strong> Score 200+ points (20+ moles hit)</p>
-        <p>• <strong>GOOD:</strong> Score 100-190 points (10-19 moles hit)</p>
-        <p>• <strong>OKAY:</strong> Score 50-90 points (5-9 moles hit)</p>
-        <p>• <strong>TRY AGAIN:</strong> Score below 50 points (less than 5 moles hit)</p>
+        <p>• <strong>EXCELLENT:</strong> Score 300+ points (30+ moles hit)</p>
+        <p>• <strong>GOOD:</strong> Score 150-290 points (15-29 moles hit)</p>
+        <p>• <strong>OKAY:</strong> Score 80-140 points (8-14 moles hit)</p>
+        <p>• <strong>TRY AGAIN:</strong> Score below 80 points (less than 8 moles hit)</p>
         
         <p>🥽 <strong>VR Mode:</strong> Click the VR goggles icon in the bottom right to enter VR mode</p>
         <p>🖱️ <strong>Desktop Mode:</strong> Use your mouse to look around and click on moles</p>
@@ -132,11 +132,11 @@
                     <!-- Game holes and moles -->
                     <a-cylinder id="hole1" position="-2 0.01 -1" radius="0.4" height="0.02" color="#654321"></a-cylinder>
                     <a-box id="mole1" class="mole" position="-2 -0.3 -1" width="0.6" height="0.6" depth="0.6" 
-                           color="#8B4513" shadow="cast: true"></a-box>
+                           color="#A0522D" shadow="cast: true"></a-box>
 
                     <a-cylinder id="hole2" position="0 0.01 -2" radius="0.4" height="0.02" color="#654321"></a-cylinder>
                     <a-sphere id="mole2" class="mole" position="0 -0.3 -2" radius="0.3" 
-                              color="#D2691E" shadow="cast: true"></a-sphere>
+                              color="#A0522D" shadow="cast: true"></a-sphere>
 
                     <a-cylinder id="hole3" position="2 0.01 -1" radius="0.4" height="0.02" color="#654321"></a-cylinder>
                     <a-box id="mole3" class="mole" position="2 -0.3 -1" width="0.6" height="0.6" depth="0.6" 
@@ -144,11 +144,11 @@
 
                     <a-cylinder id="hole4" position="-1 0.01 0" radius="0.4" height="0.02" color="#654321"></a-cylinder>
                     <a-sphere id="mole4" class="mole" position="-1 -0.3 0" radius="0.3" 
-                              color="#CD853F" shadow="cast: true"></a-sphere>
+                              color="#A0522D" shadow="cast: true"></a-sphere>
 
                     <a-cylinder id="hole5" position="1 0.01 0" radius="0.4" height="0.02" color="#654321"></a-cylinder>
                     <a-box id="mole5" class="mole" position="1 -0.3 0" width="0.6" height="0.6" depth="0.6" 
-                           color="#DEB887" shadow="cast: true"></a-box>
+                           color="#A0522D" shadow="cast: true"></a-box>
 
                     <!-- Score and Timer display -->
                     <a-text id="score" position="-1.5 3 -3" align="center" color="white" 
@@ -192,11 +192,11 @@
 
             // Function to determine performance level
             function getPerformanceLevel(finalScore) {
-                if (finalScore >= 200) {
+                if (finalScore >= 300) {
                     return { level: "EXCELLENT", color: "green", message: "Amazing! You're a mole-whacking master!" };
-                } else if (finalScore >= 100) {
+                } else if (finalScore >= 150) {
                     return { level: "GOOD", color: "blue", message: "Great job! You've got good reflexes!" };
-                } else if (finalScore >= 50) {
+                } else if (finalScore >= 80) {
                     return { level: "OKAY", color: "orange", message: "Not bad! Keep practicing to improve!" };
                 } else {
                     return { level: "TRY AGAIN", color: "red", message: "Don't give up! Practice makes perfect!" };
@@ -327,3 +327,4 @@
     </script>
 </body>
 </html>
+
